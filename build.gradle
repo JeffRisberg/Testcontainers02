@@ -24,3 +24,14 @@ dependencies {
 
     testCompile 'mysql:mysql-connector-java:8.0.22'
 }
+
+test {
+    testLogging.showStandardStreams = true
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+    }
+    useTestNG() {
+        useDefaultListeners = true
+    }
+    reports.html.enabled = true
+}
