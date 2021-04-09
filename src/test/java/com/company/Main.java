@@ -1,22 +1,31 @@
 package com.company;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.sql.*;
+import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 @Slf4j
 public class Main {
 
-  @Test
-  public void sampleTestMethod() throws SQLException {
-    MySQLContainer<?> mysql = new MySQLContainer<>(DockerImageName.parse("mysql"));
+  static MySQLContainer<?> mysql;
+
+  @BeforeClass
+  public static void setup() {
+    mysql = new MySQLContainer<>(DockerImageName.parse("mysql"));
 
     mysql.start();
+  }
 
+  @AfterClass
+  public static void teardown() {
+    mysql.start();
+  }
+
+  @Test
+  public void sampleTestMethod1() throws SQLException {
     try (Connection conn = mysql.createConnection("")) {
       Statement stmt = conn.createStatement();
 
@@ -53,8 +62,47 @@ public class Main {
       Assert.assertEquals(resultId, 100);
     } catch (Exception e) {
       e.printStackTrace();
+      Assert.fail();
     }
+  }
 
-    mysql.stop();
+  @Test
+  public void sampleTestMethod2() throws SQLException {
+    try (Connection conn = mysql.createConnection("")) {
+      Statement stmt = conn.createStatement();
+
+      // create sql table
+      String sql =
+          "CREATE TABLE data_sources "
+              + "(id INTEGER NOT NULL, "
+              + " name VARCHAR(255), "
+              + " content_type_name VARCHAR(255), "
+              + " PRIMARY KEY (id))";
+
+      stmt.executeUpdate(sql);
+
+      // insert records in table 'registration'
+      String insertSQL1 = "INSERT INTO data_sources VALUES (1, 'SNOW 2785', 'Tickets')";
+      stmt.executeUpdate(insertSQL1);
+
+      String insertSQL2 = "INSERT INTO data_sources VALUES (2, 'SNOW 2785', 'Users')";
+      stmt.executeUpdate(insertSQL2);
+
+      // fetching and asserting the record
+      ResultSet result = stmt.executeQuery("select id, name, content_type_name from data_sources");
+      result.next();
+
+      int resultId = result.getInt(1);
+      String resultName = result.getString(2);
+      String resultContentType = result.getString(3);
+
+      log.info("Result id=" + resultId + ", name=" + resultName + ", contentType=" + resultContentType);
+
+      Assert.assertEquals(resultId, 1);
+      Assert.assertEquals(resultName, "SNOW 2785");
+    } catch (Exception e) {
+      e.printStackTrace();
+      Assert.fail();
+    }
   }
 }
