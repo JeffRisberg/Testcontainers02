@@ -18,7 +18,9 @@ dependencies {
     compile "org.projectlombok:lombok:$projectLombokVersion"
 
     testCompile "org.testng:testng:$testNGVersion"
+
     testCompile "org.testcontainers:testcontainers:1.15.2"
     testCompile "org.testcontainers:mysql:1.15.2"
+
     testCompile 'mysql:mysql-connector-java:8.0.22'
 }

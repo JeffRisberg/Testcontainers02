@@ -3,10 +3,10 @@ package com.company;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
-import org.junit.Assert;
-import org.junit.Test;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 @Slf4j
 public class Main {
@@ -50,7 +50,7 @@ public class Main {
 
       log.info("Result id=" + resultId + ", first=" + resultFirst);
 
-      Assert.assertEquals(100, resultId);
+      Assert.assertEquals(resultId, 100);
     } catch (Exception e) {
       e.printStackTrace();
     }
