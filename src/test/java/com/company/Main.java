@@ -21,8 +21,6 @@ public class Main {
     withEnvironmentVariables = withEnvironmentVariable("TESTCONTAINERS_RYUK_DISABLED", "true");
 
     withEnvironmentVariables.execute(() -> {
-      System.out.println(System.getenv("TESTCONTAINERS_RYUK_DISABLED"));
-
       mysql = new MySQLContainer<>(DockerImageName.parse("mysql"));
 
       mysql.start();
