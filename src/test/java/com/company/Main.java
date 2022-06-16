@@ -1,5 +1,8 @@
 package com.company;
 
+import static com.github.stefanbirkner.systemlambda.SystemLambda.withEnvironmentVariable;
+
+import com.github.stefanbirkner.systemlambda.SystemLambda;
 import java.sql.*;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.MySQLContainer;
@@ -9,14 +12,21 @@ import org.testng.annotations.*;
 
 @Slf4j
 public class Main {
-
-  static MySQLContainer<?> mysql;
+  private static SystemLambda.WithEnvironmentVariables withEnvironmentVariables;
+  private static MySQLContainer<?> mysql;
 
   @BeforeClass
-  public static void setup() {
-    mysql = new MySQLContainer<>(DockerImageName.parse("mysql"));
+  public static void setup() throws Exception {
 
-    mysql.start();
+    withEnvironmentVariables = withEnvironmentVariable("TESTCONTAINERS_RYUK_DISABLED", "true");
+
+    withEnvironmentVariables.execute(() -> {
+      System.out.println(System.getenv("TESTCONTAINERS_RYUK_DISABLED"));
+
+      mysql = new MySQLContainer<>(DockerImageName.parse("mysql"));
+
+      mysql.start();
+    });
   }
 
   @AfterClass
@@ -81,7 +91,7 @@ public class Main {
 
       stmt.executeUpdate(sql);
 
-      // insert records in table 'registration'
+      // insert records in table 'data_sources'
       String insertSQL1 = "INSERT INTO data_sources VALUES (1, 'SNOW 2785', 'Tickets')";
       stmt.executeUpdate(insertSQL1);
 

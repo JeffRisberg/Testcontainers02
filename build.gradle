@@ -10,17 +10,18 @@ ext {
     slf4jVersion = '1.7.30'
     projectLombokVersion = '1.16.20'
     testNGVersion = '7.3.0'
+    testcontainersVersion = '1.17.2'
 }
 
 dependencies {
     compile "org.slf4j:slf4j-api:$slf4jVersion"
     runtime "org.slf4j:slf4j-simple:$slf4jVersion"
     compile "org.projectlombok:lombok:$projectLombokVersion"
-
+    testCompile 'com.github.stefanbirkner:system-lambda:1.2.1'
     testCompile "org.testng:testng:$testNGVersion"
 
-    testCompile "org.testcontainers:testcontainers:1.15.2"
-    testCompile "org.testcontainers:mysql:1.15.2"
+    testCompile "org.testcontainers:testcontainers:$testcontainersVersion"
+    testCompile "org.testcontainers:mysql:$testcontainersVersion"
 
     testCompile 'mysql:mysql-connector-java:8.0.22'
 }
